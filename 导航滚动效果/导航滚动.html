@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			#mod{
+				width: 500px;
+				margin: 20px auto 0;
+			}
+			#list{
+				list-style: none;
+			}
+			#list li{
+				float:  left;
+				width: 100px;
+				height: 20px;
+				text-align: center;
+			}
+			#list a{
+				text-decoration: none;
+				color: black;
+				font-size: 20px;
+			}
+			#nav{
+				position: relative;
+				width: 500px;
+				height: 32px;
+			}
+			
+			#slider{
+				position: absolute;
+				width: 100px;
+				height: 2px;
+				background: gray;
+				top: 30px;
+			}
+			
+		</style>
+		
+		<script type="text/javascript" src="js/tween.js">
+			
+		</script>
+	</head>
+	<body>
+		<div id="mod">
+			<div id="nav">
+				<ul id="list">
+					<li><a href="#">按钮1</a></li>
+					<li><a href="#">按钮2</a></li>
+					<li><a href="#">按钮3</a></li>
+					<li><a href="#">按钮4</a></li>
+					<li><a href="#">按钮5</a></li>
+				</ul>
+				<div id="slider"></div>
+			</div>
+		</div>
+	</body>
+	
+	
+	<script type="text/javascript">
+		var ulList = document.getElementById("list");
+		// 获取到所有的li标签
+		var liArray = ulList.getElementsByTagName("li");
+		// 获取 slider
+		var sliderDiv = document.getElementById("slider");
+		var timer = null;
+		
+		for (var i = 0; i < liArray.length;i++) {
+			liArray[i].selectIndex = i;
+			liArray[i].onmouseover = function(){
+				// 实现移动
+				// 清除上一次的滑动
+				clearInterval(timer);
+				move(this.selectIndex);
+			}
+		}
+		
+		 function move(index){
+		 	
+		 	var t = 0;
+		 	var b = sliderDiv.offsetLeft;
+		 	var end = sliderDiv.offsetWidth * index;
+		 	var c = end - b; 	
+		 	var d = 30;
+		 	 timer =	setInterval(function(){
+		 		t++;
+		 		if(t >= d){
+		 			clearInterval(timer);
+		 		}
+		 		sliderDiv.style.left = Tween.Back.easeOut(t,b,c,d) +"px"; 
+		 	},10);
+		 	
+		 }
+		
+		
+	</script>
+</html>
