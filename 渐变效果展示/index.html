@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style type="text/css">
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			#sliderBox{
+				width: 1000px;
+				height: 587px;
+				text-align: center;
+				margin: 20px auto 0;
+				background: url(img/background.jpg) left bottom repeat-x;
+				overflow: hidden;
+			}
+			#list{
+				width: 100%;
+				list-style: none;
+			}
+			#sliderContent{
+				width: 100%;
+				margin-top: 10%;	
+			}
+			#list li{
+				position: absolute;
+			}
+			
+		</style>
+		<script type="text/javascript" src="js/tween.js"></script>
+	</head>
+	<body>
+		<div id="sliderBox">
+			<div id="sliderContent">
+				<ul id="list">
+					<li><img src="img/1.png" alt="" /></li>
+					<li><img src="img/2.png" alt="" /></li>
+					<li><img src="img/3.png" alt="" /></li>
+					<li><img src="img/4.png" alt="" /></li>
+					<li><img src="img/5.png" alt="" /></li>
+				</ul>
+			</div>
+			
+			<div id="sliderPage">
+				
+			</div>
+		</div>
+	</body>
+	
+	<script type="text/javascript">
+		var sliderContent = document.getElementById("sliderContent");
+		var list = document.getElementById("list");
+		var liArray = list.getElementsByTagName("li");
+		function init(){		
+			// 用来记录下一次需要选择的图片
+			var selectIndex = 0;		
+			// 用来记录当前显示的图片
+			var nowIndex = 0;
+			var numberOfImage = liArray.length;
+			// 默认显示第一张
+			hiddenLiByOpacity();
+			liArray[selectIndex].style.opacity = 1;
+			// 每次开始动画之前都清除上一次的定时器
+			var  animateTimer = null;
+			// 每经过3s切换图片
+			setInterval(function(){
+				nowIndex = selectIndex % numberOfImage;
+				selectIndex ++;
+				selectIndex = selectIndex % numberOfImage;
+				clearInterval(animateTimer);
+				
+				var t = 0;
+				var nowB = 1.0;
+				var selectB = 0.0;
+				var nowC = -1.0;
+				var selectC = 1.0;
+				var d = 40;
+				animateTimer =  setInterval(function(){
+					t++;
+					if(t >= d){
+						clearInterval(animateTimer);
+					}
+					liArray[nowIndex].style.opacity = Tween.Linear(t,nowB,nowC,d);
+					liArray[selectIndex].style.opacity = Tween.Linear(t,selectB,selectC,d);
+				},50);
+			},3000);
+				
+		}
+		init();
+		function hiddenLiByOpacity(){
+			for (var i = 0;i < liArray.length;i++) {
+					liArray[i].style.opacity = 0;
+				}
+		}
+	</script>
+	
+</html>

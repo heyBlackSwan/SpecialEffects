@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		
+		<title></title>
+		<style type="text/css">
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			.wrap{
+				width: 992px;
+				margin: 80px auto;
+				background: #B6B6B6;
+				overflow: hidden;
+				
+			}
+			.unit{
+				width:216px;
+				border:1px solid #dcdcdc;
+				overflow:hidden;
+				float:left;
+				margin:15px 15px 15px 15px;
+				background-color:#fff;
+			}
+			.img{
+				height:300px;
+				overflow:hidden;
+				position:relative;
+			}
+			.img img{
+				width: 216px;
+				height: 300px;
+			}
+			.desc{
+				/*display: none;*/
+				/*height:300px;*/
+				/*width:216px;*/
+				/*margin-left: 12px;*/
+				background: black;
+				opacity: 0.5;
+				height:270px;
+				width:186px;
+				padding:15px;
+				position:absolute;
+				top:-300px;
+				left:0px;
+				color:#00FFFF;		
+				text-align: center;
+				line-height: 270px;		
+			}
+			.title{
+				/*width: 216px;*/
+				/*height: 30px;*/
+				text-align: center;
+				/*position: absolute;*/
+				/*top: 300px;*/
+				line-height: 30px;
+				background: grey;
+				color: white;
+				/*margin-left: 12px;*/
+				border-top:1px solid black;
+				padding:7px 14px;
+				opacity:0.5;				
+			}			
+		</style>
+		<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	</head>
+	<body>
+		<div class="wrap">
+			<div class="unit">
+				<div class="img">
+					<img src="images/label_1.jpg"/>
+					<div class="desc">
+						这货是漩涡鸣人
+					</div>					
+				</div>	
+				<div class="title">
+					漩涡鸣人
+				</div>
+			</div>
+			<div class="unit">
+				<div class="img">
+					<img src="images/label_2.jpg"/>
+					<div class="desc">
+						这货是鸣人他爹
+					</div>					
+				</div>	
+				<div class="title">
+					风波水门
+				</div>
+			</div>
+			<div class="unit">
+				<div class="img">
+					<img src="images/label_3.jpg"/>
+					<div class="desc">
+						这货是我爱罗
+					</div>					
+				</div>	
+				<div class="title">
+					我爱罗
+				</div>
+			</div>
+			<div class="unit">
+				<div class="img">
+					<img src="images/label_4.jpg"/>
+					<div class="desc">
+						这货是宇智波斑
+					</div>					
+				</div>	
+				<div class="title">
+					宇智波斑
+				</div>
+			</div>
+			<div class="unit">
+				<div class="img">
+					<img src="images/label_5.jpg"/>
+					<div class="desc">
+						这货是春野樱
+					</div>					
+				</div>	
+				<div class="title">
+					春野樱
+				</div>
+			</div>
+			<div class="unit">
+				<div class="img">
+					<img src="images/label_6.jpg"/>
+					<div class="desc">
+						这货是旗木卡卡西
+					</div>					
+				</div>	
+				<div class="title">
+					旗木卡卡西
+				</div>
+			</div>
+			<div class="unit">
+				<div class="img">
+					<img src="images/label_7.jpg"/>
+					<div class="desc">
+						这货是自来也
+					</div>					
+				</div>	
+				<div class="title">
+					自来也
+				</div>
+			</div>
+			<div class="unit">
+				<div class="img">
+					<img src="images/label_8.png"/>
+					<div class="desc">
+						这货是宇智波鼬
+					</div>					
+				</div>	
+				<div class="title">
+					宇智波鼬
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function(){
+			$(".unit .img").hover(function(e){
+				var _this = $(this),//闭包
+					_desc = _this.find(".desc").stop(true),
+					width = _this.width(),//获取元素宽
+					height = _this.height(),//获取元素高
+					left = e.offsetX || e.originalEvent.layerX,//得到左边界
+					top = e.offsetY || e.originalEvent.layerY,//得到上边界
+					right = width - left,//计算出右边界
+					bottom = height - top,//计算出下边界
+					rect = {},//坐标对象,用于执行对应方法
+					_min = Math.min(left,top,right,bottom),//得到边界最小值
+					_out = e.type == "mouseleave",//是否是离开事件
+					steps = {};//起始位置
+					
+				rect[left] = function(epos){
+					steps = {"left":-width,"top":0};//鼠标从左边进入和离开事件
+					if (_out) {
+						_desc.animate(steps,"fsat");//从左侧离开					
+					} else{
+						_desc.css(steps).animate(epos,"fast");//从左侧进入
+					}
+				};
+				rect[top] = function(epos){
+					steps = {"top": -height,"left":0};//鼠标从上边进入离开事件
+					if (_out) {
+						_desc.animate(steps,"fast");//从上边离开
+						
+					}else{
+						_desc.css(steps).animate(epos,"fast");//从上边进入
+					}
+				};
+				rect[right] = function(epos){
+					steps = {"left": left,"top":0};//鼠标从右侧进入离开事件
+					if (_out) {
+						_desc.animate(steps,"fast");//从右侧离开
+						
+					} else{
+						_desc.css(steps).animate(epos,"fast");//从右侧进入
+					}
+				};
+				rect[bottom] = function(epos){
+					steps = {"top": height,"left":0};//鼠标从下边进入离开事件
+					if (_out) {
+						_desc.animate(steps,"fast");//从底部离开
+					} else{
+						_desc.css(steps).animate(epos,"fast");//从底部进入
+					}
+				};
+				rect[_min]({"left":0,"top":0});//执行对应边界 进入/离开的方法
+				console.log(top,bottom,left,right,height,top);
+			});
+		});
+	</script>
+</html>

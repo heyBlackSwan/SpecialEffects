@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			#wrap{
+				width: 600px;
+				height: 600px;
+				border: 1px solid red;
+				/*position: relative;*/
+				margin: 30px auto;
+				overflow: hidden;
+			}
+			#box{
+				width: 600px;
+				height: 600px;
+				position: relative;
+				/*bottom: 0;*/
+				
+			}
+			#box .row{
+				position: absolute;
+				overflow: hidden;
+			}
+			#box .row div{
+				float: left;
+				-webkit-transition: all 0.1;
+			}
+			#score{
+				text-align: center;
+				color: greenyellow;
+				font-size: 30px;
+			}
+			#restart{
+				width: 100px;
+				height: 50px;
+				color: black;
+				margin: auto;
+				cursor: pointer;
+				background: red;
+				text-align: center;
+				line-height: 50px;
+				font-size: 25px;
+				border-radius: 10%;
+			}
+			#restart:hover{
+				color: red;
+				background: black;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="box">
+				<div id="score">
+					0
+				</div>
+			</div>
+		</div>
+		<div id="restart">
+			重新开始
+		</div>
+	</body>
+	<script type="text/javascript">
+		var box = document.getElementById("box");
+		//初始创建每行小个子数量
+		var number = 20;
+		//row 的bottom
+		var rowBottom = 0;
+		//定义每行移动的时间
+		var time = 500;
+		//定义游戏开始结束判断变量
+		var gaming = true;
+		//获取积分器
+		var score = document.getElementById("score");
+		var scoreNumber = 0;
+		
+		
+		
+		var boxHight = 0;
+		
+		var restart = document.getElementById("restart");
+		
+		//定义一个动态获取地址参数
+		var href = location.href;
+		
+//		//计分函数
+//		function score(){
+//			var scoreNumber = parseInt( score.innerHTML);
+//			if (rowBottom >= 0) {
+//				scoreNumber = rowBottom / 20;
+//			}
+//			score.innerHTML = scoreNumber;
+//		}
+		
+		//创建 row
+		function createRowFun(){
+			//创建一行
+			var row = document.createElement("div");
+			//设置 row 的宽度
+			row.style.width = number * 20 + "px";
+			//给row添加一个classname 目的在于通过css设置row使用绝对定位
+			
+			row.className = "row";
+			//设置每行的bottom
+			row.style.bottom = rowBottom + "px";
+			//把row插入到box中
+			box.appendChild(row);
+			
+			//创建row里面的小格子
+			for (var i = 0;i < number;i++) {
+				var small = document.createElement("div");
+				small.style.width = "18px";
+				small.style.height = "18px";
+				small.style.border = "1px solid gray";
+				row.appendChild(small);
+			}
+			//定义一个方向 true代表右  false代表左
+			var direction = true;
+			var rowLeft = row.offsetLeft;
+			var maxWidth = box.clientWidth - row.offsetWidth;
+			row.timer = setInterval(function(){
+				if (direction == true) {
+					//向右
+					rowLeft += 20;
+					if(rowLeft >= maxWidth){
+						direction = false;
+					}
+				} else{
+					//向左
+					rowLeft -= 20;
+					if (rowLeft <= 0) {
+						//反向
+						direction = true;
+					}
+				}
+				row.style.left = rowLeft + "px";
+			},time)
+			
+			
+			
+		}
+		
+		createRowFun();
+		
+		//实现点击的时候创建一行
+		box.onclick = function(){
+			rowBottom += 20;
+			//速度越来越快
+			time -= 50;
+			if (time < 50) {
+				time = 50;
+			}
+			
+			//先让当前元素停下来
+			var nowRow = box.lastElementChild;
+			//移除定时器
+			clearInterval(nowRow.timer);
+//			var boxHight = 0;
+			if (rowBottom >= 200) {
+				boxHight += 20;
+				box.style.height = 600 + boxHight + "px";
+				
+			}
+			
+			
+			//先移除小格子
+			removeSmallFun();
+			if (gaming == true) {
+				//创建一行
+				createRowFun();
+//				var scoreNumber = parseInt( score.innerHTML);
+				scoreNumber += 1;
+				score.innerHTML = scoreNumber;
+				
+				
+			}
+
+						
+		}
+		
+		//移除小格子
+		function removeSmallFun(){
+			//获取当前正在滑动的块
+			var nowItem = box.lastElementChild;
+			//获取当前块下面的块
+			var preItem = nowItem.previousElementSibling;
+			//如果是第一行的时候，直接不处理
+			if (preItem == null) {
+				return;
+				
+			}
+			//超出的距离
+			var length = nowItem.offsetLeft - preItem.offsetLeft;
+			//计算需要移除的小格子数
+			var removeNumberSmall = Math.abs(length) / 20;
+
+			if (removeNumberSmall >= nowItem.children.length) {
+				gaming = false;
+				alert("游戏结束");
+				return;
+			}
+			
+			//如何判断左边还是右边超出
+			if (length > 0) {
+				//右边超出
+				for (var i = 0;i < removeNumberSmall;i++) {
+					var rowLength = nowItem.children.length;
+					var child = nowItem.children[rowLength - 1];
+					setInterval(function(){
+						child.style.opacity = 0;
+					},200);
+					nowItem.removeChild(child);
+				}
+				//修改row的width
+				nowItem.style.width = nowItem.children.length * 20 + "px";
+				
+			} else{
+				//左边超出
+				for (var i = 0;i < removeNumberSmall;i++) {
+					var child = nowItem.children[0];
+					nowItem.removeChild(child);
+				}
+				//修改 row 的width
+				nowItem.style.width = nowItem.children.length * 20 + "px";
+				//修改left
+				//获取当前left
+				var nowLeft = nowItem.offsetLeft;
+				nowItem.style.left = nowLeft + 20 * removeNumberSmall + "px";
+			}
+			//修改number ，让下一次创建 row 的时候长度跟现在一样
+			number = nowItem.children.length;
+			
+			restart.onclick = function(){
+				location.replace(href);
+			}
+		}
+	</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery轮播图插件</title>
+	<link rel="stylesheet" href="css/jquery.slide.css" />
+</head>
+<body>
+<div class="focus_box">
+	<ul class="focus_bd">
+		<li><img src="images/img01.jpg" alt="" /></li>
+		<li><img src="images/img02.jpg" alt="" /></li>
+		<li><img src="images/img03.jpg" alt="" /></li>
+	</ul>
+	<ul class="focus_btn"></ul>
+</div>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery.slide.js"></script>
+<script type="text/javascript">
+	$(".focus_box").slide({
+		isAuto: true, //是否自动轮播，默认为true
+		hasNext: true, //是否有下一个按钮，默认为true
+		hasPrev: true, //是否有上一个按钮，默认为true
+		activeIndex: 0, //当前展示图片索引，默认0
+		speed: 300, //动画速度
+		time: 3000 //间隔时间
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+		*{
+			margin: 0px;
+			padding: 0px;
+		}
+		
+			#wrap{
+				position: relative;
+				margin: 0 auto;
+			}
+			.list{
+				float: left;
+			}
+			.list li{
+				width: 200px;
+				border: 2px solid lightskyblue;
+				border-radius: 5px;
+				font-size: 50px;
+				text-align: center;
+				list-style: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<ul class="list"></ul>
+			<ul class="list"></ul>
+			<ul class="list"></ul>
+			<ul class="list"></ul>
+		</div>
+	</body>
+	<script type="text/javascript">
+	//获取所有ul
+	var uls = document.querySelectorAll('ul');
+		function rand(min,max){
+			return parseInt(Math.random()*(max-min))+min;
+		}
+		//构建一个函数用于创建li元素
+		function createli(index){
+			//创建一个li元素
+			var li = document.createElement('li');
+			li.innerHTML=index;
+			//产生一个100~200之间的随机高度作为li的高度
+			var h = rand(100,200);
+			//将高度赋予li
+			li.style.height = h + 'px';
+			//将高度赋予li的行高
+			li.style.lineHeight = h + 'px';
+			//将li元素追加至ul
+			//uls[index%4].appendChild(li);
+			//定义minIndex,最小高度UL的索引位置
+			var minIndex = 0;
+			//取出第一个ul的高度
+			var minHeight = uls[minIndex].offsetHeight;
+			for(var i  = 0;i<uls.length;i++){
+				var ulHeight = uls[i].offsetHeight;
+				if(minHeight>ulHeight){
+					minHeight = ulHeight;
+					minIndex = i;
+				}
+			}
+			uls[minIndex].appendChild(li);
+		}
+		for(var i=0;i<=30;i++){
+			createli(i);
+		}
+			//为window添加一个滚动监听事件,当滚动到底部的时候 触发添加的方法
+		window.onscroll = function(){
+			//得到页面的总高度,包含当前视窗的高度以及滚动条隐藏的高度
+			var sh = document.body.scrollHeight;
+			//得到当前页面滚动的距离
+			var st = document.body.scrollTop;
+			//取得当前视口的高度 为了处理不同浏览器之间的兼容性,下面提供了三种方法:
+			//body.clientHeight与documentElement.clientHeight
+			//只会取到一个正确的值,另一个值为0
+			var ch = Math.max(document.documentElement.clientHeight,
+				document.body.clientHeight);
+//				var ch = document.documentElement.clientHeight+document.body.clientHeight;
+//              var ch = document.documentElement.clientHeight||document.body.clientHeight;
+			if((ch+st)==sh){//如果视口的高度加上滚动的距离等于总高度,则认为到达页面底部
+				for(var i=0;i<=30;i++){
+			createli(i);
+		}
+  	  }
+	}
+	</script>
+</html>
+
+

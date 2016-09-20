@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			body{
+				height: 5000px;
+				position: relative;
+			}
+			.p1{
+				position: absolute;
+				top: 0;
+				
+			}
+			.p2{
+				position: absolute;
+				bottom: 0;
+			}
+			#go_top{
+				width: 100px;
+				height: 100px;
+				line-height: 100px;
+				background: #CCCCCC;
+				position: fixed;
+				bottom: 0;
+				right: 0;
+				font-size: 20px;
+				display: none;
+				text-align: center;
+				cursor: pointer;
+			}
+		</style>
+		<script type="text/javascript" src="tween.js">
+			
+		</script>
+	</head>
+	<body>
+		<p class="p1">我在顶部</p>
+		<p class="p2">我在底部</p>
+		<div id="go_top">
+			回到顶部
+		</div>
+	</body>
+	<script type="text/javascript">
+		function topStyle(){
+			var rocket = document.getElementById("go_top");
+		//实现偏移量不为零的时候显示小火箭，为零的时候隐藏
+		window.onscroll = function(){
+			//获取当前偏移量
+			var nowTop = document.body.scrollTop || document.documentElement.scrollTop;
+			//判断当前偏移量
+			if (nowTop > 100) {
+				rocket.style.display = "block";
+			} else{
+				rocket.style.display = "none";
+			}
+			//点击小火箭，回到页面顶端
+			rocket.onclick = function(){
+				var originTop = document.body.scrollTop || document.documentElement.scrollTop;
+				var t = 0;
+				var b = originTop;
+				var c = 0 - originTop;
+				var d = 20;
+				//考虑兼容性
+				var timer = setInterval(function(){
+					t++;
+					if (t >= d) {
+						clearInterval(timer);
+					}
+					if (document.documentElement.scrollTop > 0) {
+					document.documentElement.scrollTop = Tween.Bounce.easeOut(t,b,c,d);
+				} else{
+					document.body.scrollTop = Tween.Bounce.easeOut(t,b,c,d);
+				}
+				},30);
+				
+				
+			}
+		}
+		}
+		topStyle();
+		
+	</script>
+</html>

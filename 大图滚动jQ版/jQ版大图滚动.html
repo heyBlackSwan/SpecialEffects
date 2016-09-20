@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>jQ版大图滚动</title>
+		<style type="text/css">
+		* { margin: 0; padding: 0; list-style: none; -webkit-user-select:none; }
+		/** -webkit-user-select:none; 是取消频繁点击下，文字和图片选中态，每个浏览器有不同的写法，这里只举例了谷歌 **/
+		.btn_mod,
+		.img_mod { width: 400px; margin: 20px auto 0; overflow: hidden; }
+		.img_mod,
+		.img_mod .scroll { height: 400px; }
+		.img_mod { position: relative; }
+		.img_mod .scroll { position: absolute; left: 0; right: 0; overflow: hidden; }
+		.img_mod .scroll img { float: left; width: 400px; height: 400px; }
+		.btn_mod { padding-left: 10px; }
+		.btn_mod li,
+		.btn_mod div { float: left; width: 60px; height: 30px; margin-right: 6px; line-height: 30px; text-align: center; font-weight: bold; font-size: 14px; color: #666; background: #ccc; cursor: pointer; outline: none; }
+		.btn_mod .active { background: #999; }
+		</style>
+	</head>
+	<body>
+		<div class="btn_mod">
+			<div class="prev">上一页</div>
+			<ul class="btn_list">
+				<li class="active">1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+			</ul>
+			<div class="next">下一页</div>
+		</div>
+		<div class="img_mod">
+			<!-- 滚动元素的宽度写在行间是方便调整，举个极端场景的例子：如果将来要放很多图片，定义的宽度不满足了，在行间改的话开发可以帮我们直接改完上线，比我们修改样式表再进行样式上线要快。 -->
+			<div class="scroll" style="width:9999px;">
+				<img src="images/img01.jpg" />
+				<img src="images/img02.jpg" />
+				<img src="images/img03.jpg" />
+				<img src="images/img04.jpg" />
+				<img src="images/img01.jpg" />
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="jQuery.js"></script>
+	<script type="text/javascript">
+
+		var btns = $(".btn_list>li"); //数字按钮
+		var nextBtn = $(".next"); //下一页按钮
+		var prevBtn = $(".prev"); //上一页按钮
+		var scroll = $(".scroll"); //滚动对象
+		var imgs = $(".img_mod img"); //图片
+		var width = $(".img_mod img:eq(0)").width(); //图片宽度
+		var index = 0; //初始下标
+		var len = imgs.length - 1; //最后一张图下标
+		var lock = false; //锁，防止频繁操作发生错乱
+
+		//下一页按钮点击事件
+		nextBtn.click(function () {
+			if(lock){
+				return;
+			}
+			lock = true; //如果正在进行一次操作，则上锁
+
+			var left = parseInt(scroll.position().left); //left值取整
+
+			if (left <= -(len-1) * width && left > -len * width) { //在原本最后一张图和结尾重复的第一张图之间时
+				index = 0;
+				scroll.animate({
+					left : -len * width
+				});
+			}else if(left <= -len * width){ //滚到结尾重复的第一张图时
+				index = 1; //由于结尾重复的第一张图已经出现过，所以从第二张图继续开始新一轮滚动
+				scroll.css({"left":0}); //从0开始滚动到第二张图的位置
+				scroll.animate({
+					left : -width  //第二张图的位置在-400的地方
+	 			});
+			}else{
+				index ++;
+				index = index > len ? len - 1 : index; //边界值判断
+				scroll.animate({
+					left : -index * width
+	 			});
+			}
+
+			btns.eq(index).addClass("active").siblings().removeClass("active"); //数字按钮选中态
+
+			setTimeout(function(){
+				lock = false;
+			},500); //500ms内如果多次点击，只能生效一次，防止频繁操作引起的混乱
+		});
+
+		//上一页按钮点击事件
+		prevBtn.click(function () {
+			if(lock){ //锁
+				return;
+			}
+			lock = true;
+
+			var left = parseInt(scroll.position().left);
+
+			if (left > -width && left == 0) { //在第一第二张图之间时
+				index = len - 1; //index等于原本最后一张图的下标
+				scroll.css({"left":-len * width}); //left从重复的第一张图的位置滚到原本最后一张图的位置
+				scroll.animate({
+					left : -index * width
+				});
+			}else{
+				index--;
+				index = index < 0 ? 0 :index; //边界值判断
+				scroll.animate({
+					left : -index * width
+				});
+			}
+
+			btns.eq(index).addClass("active").siblings().removeClass("active");
+
+			setTimeout(function(){
+	 			lock = false;
+			},500); //同上
+		});
+
+		//数字按钮点击事件
+		btns.click(function () {
+			index = $(this).index();
+			btns.eq(index).addClass("active").siblings().removeClass("active");
+			scroll.animate({
+				left : -index * width
+			});
+		});
+	</script>
+</html>
