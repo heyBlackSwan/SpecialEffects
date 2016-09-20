@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			body{
+				background: black;
+			}
+			#box{
+				width: 500px;
+				height: 500px;
+				border-radius: 50%;
+				/*background: -webkit-linear-gradient(top left,rgb(162,180,230),rgb(234,119,213));*/
+				background: url(img/5.jpg) white;	
+				margin: 50px auto 0;
+				position: relative;
+				/*background-size: 100% 100%;*/
+			}
+			#indemo{
+				width: 460px;
+				height: 460px;
+				border-radius: 50%;
+				background: url(img/1.jpg);
+				background-size: 100% 100%;
+				position: absolute;
+				left: 20px;
+				top: 20px;
+			}
+			#number div{
+				width: 440px;
+				height: 30px;
+				position: absolute;
+				left: 10px;
+				top: 215px;
+				font-size: 30px;
+				color: rgb(5,249,50);
+			}
+			#number span{
+				display:inline-block;
+				width: 50px;
+				height: 30px;
+				text-align: center;
+				line-height: 30px;
+			}
+			#hour{
+				height: 150px;
+				width: 3px;
+				background: deepskyblue;
+				opacity: 0.8;
+				
+				
+			}
+			#minute{
+				height: 180px;
+				width: 2px;
+				background: blueviolet;
+				opacity: 0.8;
+				
+			}
+			#second{
+				height: 200px;
+				width: 1px;
+				background: red;
+				opacity: 0.8;
+				
+			}
+			.pointer{
+				position: absolute;
+				bottom: 230px;
+				left: 230px;
+				-webkit-transform-origin: 50% bottom;
+			}
+			#center{
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				background: url(img/图层.png) ;
+				background-size: 100% 100%;
+				position: absolute;
+				bottom: 200px;
+				left: 208px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<div id="indemo">
+				<div id="number">
+					<div><span>IX</span></div>
+					<div><span>X</span></div>
+					<div><span>XI</span></div>
+					<div><span>XII</span></div>
+					<div><span>I</span></div>
+					<div><span>II</span></div>
+					<div><span>III</span></div>
+					<div><span>IV</span></div>
+					<div><span>V</span></div>
+					<div><span>VI</span></div>
+					<div><span>VII</span></div>
+					<div><span>VIII</span></div>
+					<!--I ， II ， III ，IV ，V ，VI ，VII ，VIII ，IX ，X ，XI ，XII -->
+				</div>
+					<div id="hour" class="pointer">
+					
+					</div>
+					<div id="minute" class="pointer">
+					
+					</div>
+					<div id="second" class="pointer">
+					
+					</div>
+					<div id="center">
+						
+					</div>
+			</div>			
+		</div>
+	</body>
+	<script type="text/javascript">
+		var number = document.getElementById("number");
+		var numberDivArray = number.getElementsByTagName("div");
+		
+		//12个数字转一圈，一个是30deg
+		var numberSpanArray = number.getElementsByTagName("span");
+		//表盘数字摆放
+		
+		for (i = 0;i < numberDivArray.length;i++) {
+			var rot = i * 30;
+			numberDivArray[i].style.transform = "rotate("+rot+"deg)";
+			numberSpanArray[i].style.transform = "rotate("+ (-rot) +"deg)";
+		}
+		
+		function Datefunction(){
+		//获取时针
+		var hourDiv = document.getElementById("hour");
+		//获取分针
+		var minuteDiv = document.getElementById("minute");
+		//获取秒针
+		var secondDiv = document.getElementById("second");
+		
+		//获取当前时间
+		var nowDate = new Date();
+		//获取小时
+		var nowHour = nowDate.getHours();
+		//获取分钟
+		var nowMin = nowDate.getMinutes();
+		//获取秒数
+		var nowSec = nowDate.getSeconds();
+		
+		//60秒一圈，一格6deg
+		secondDiv.style.transform = "rotate("+nowSec * 6+"deg)";
+		//分针轨迹 60格一圈 一格6deg
+		var minuteDeg = nowMin * 6 + nowSec / 60 * 6;
+		minuteDiv.style.transform = "rotate("+minuteDeg+"deg)";
+		//时针轨迹 12格一圈 一格30deg
+		var hourDeg = nowHour * 30 + nowMin / 60 * 30;
+		hourDiv.style.transform = "rotate("+hourDeg+"deg)";
+		
+		
+		}
+		//调用函数
+//		Datefunction();
+		setInterval(function(){
+			Datefunction();
+		},1000)
+		
+		
+		
+	</script>
+</html>
+
+
+
+
+
+
+
