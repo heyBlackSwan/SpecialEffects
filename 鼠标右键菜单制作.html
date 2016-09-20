@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			ul li{
+				list-style: none;
+			}
+			#list{
+				display: none;
+				background: red;
+				width: 150px;
+				position: absolute;
+			}
+			li{
+				width: 150px;
+				line-height: 20px;
+				text-align: center;
+				position: relative;
+				border-bottom: 1px solid gray;
+			}
+			li ul{
+				position: absolute;
+				left: 150px;
+				background: yellowgreen;
+				display: none;
+				top: 0;
+			}
+			li ul ul{
+				background: cornflowerblue;
+				display: none;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<ul id="list">
+			<li>li1</li>
+			<li>li2</li>
+			<li class="noDispear">
+				<p>li3</p>
+				<ul>
+					<li>li3-1</li>
+					<li>li3-2</li>
+					<li>li3-3</li>
+				</ul>
+			</li>
+			<li class="noDispear">
+				<p>li4</p>
+				<ul>
+					<li>li4-1</li>
+					<li>li4-2</li>
+					<li>
+						<p>li4-3</p>
+						<ul>
+							<li>li4-3-1</li>
+							<li>li4-3-2</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>li5</li>
+		</ul>
+	</body>
+	<script type="text/javascript">
+		var list = document.getElementById("list");
+		
+		
+		document.oncontextmenu = function(event){
+			var ev = event || window.event;
+			var x = ev.clientX;
+			var y = ev.clientY;
+			
+			list.style.display = "block";
+			list.style.left = x + "px";
+			list.style.top = y + "px";
+			return false;
+		}
+		document.onclick = function(){
+			list.style.display = "none";
+		}
+		//获取li3 和li4
+		var lis = document.getElementsByClassName("noDispear");
+		for (var i = 0;i < lis.length;i++) {
+			//阻止冒泡，（点击事件的传递）
+			lis[i].onclick = function(event){
+				var ev = event || window.event;
+				if (ev.stopPropagation && ev.target.tagName == "P") {
+					ev.stopPropagation()
+				} else{
+					ev.cancelBubble;
+				}
+			}
+		}
+		//li3和li4光标移入的时候出现子菜单
+		var allLi = document.getElementsByTagName("li");
+		for (var i = 0;i < allLi.length;i++) {
+			//mouseover 和 mouseenter 都是鼠标移入元素的时候触发事件，但是mouseenter不会进行事件冒泡，假设A元素包含B元素，如果使用mouseenter绑定事件给A，光标在切换A和B的时候不会触发事件，用mouseover的时候，来回切换的时候会触发。注意：onmouseenter 和 onmouseleave有兼容性问题，例：chrom3.9以下不支持
+			allLi[i].onmouseover = function(event){
+				var ev = event || window.event;
+				if (this.children.length > 0 && this.children[1].tagName == "UL") {
+					this.children[1].style.display = "block";
+				}
+			}			
+			//光标离开 li 的时候
+			allLi[i].onmouseout = function(event){
+				if (this.children.length > 0 && this.children[1].tagName == "UL") {
+					this.children[1].style.display = "none";
+				}
+			}
+			
+		}
+			
+	</script>
+</html>
